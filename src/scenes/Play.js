@@ -24,10 +24,10 @@ class Play extends Phaser.Scene {
         // add rocket (p1)
         this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'rocket').setOrigin(0.5, 0);
           // add spaceships (x3)
-        this.ship01 = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*4, 'spaceship', 0, 30).setOrigin(0, 0);
-        this.ship02 = new Spaceship(this, game.config.width + borderUISize*3, borderUISize*5 + borderPadding*2, 'spaceship', 0, 20).setOrigin(0,0);
-        this.ship03 = new Spaceship(this, game.config.width, borderUISize*6 + borderPadding*4, 'spaceship', 0, 10).setOrigin(0,0);
-        this.ship04 = new Spaceship2(this, game.config.width + borderUISize, borderUISize*10, 'spaceship2', 0, 60).setOrigin(0, 0);
+        this.ship01 = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*6, 'spaceship', 0, 30).setOrigin(0, 0);
+        this.ship02 = new Spaceship(this, game.config.width + borderUISize*3, borderUISize*7 + borderPadding*2, 'spaceship', 0, 20).setOrigin(0,0);
+        this.ship03 = new Spaceship(this, game.config.width, borderUISize*8 + borderPadding*4, 'spaceship', 0, 10).setOrigin(0,0);
+        this.ship04 = new Spaceship2(this, game.config.width + borderUISize, borderUISize*4, 'spaceship2', 0, 60).setOrigin(0, 0);
         // define keys
         keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
@@ -41,7 +41,6 @@ class Play extends Phaser.Scene {
         });
         // initialize score
         this.p1Score = 0;
-        this.highScore = 0;
           // display score
         let scoreConfig = {
             fontFamily: 'Courier',
@@ -56,12 +55,26 @@ class Play extends Phaser.Scene {
             fixedWidth: 100
         }
         this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2, this.p1Score, scoreConfig);
-        this.scoreRight = this.add.text(borderUISize + borderPadding*44, borderUISize + borderPadding*2, this.highScore, scoreConfig);
         // GAME OVER flag
         this.gameOver = false;
         // 60-second play clock
         scoreConfig.fixedWidth = 0;
-        this.clock = this.time.delayedCall(60000, () => {
+        let timeConfig = {
+          fontFamily: 'Courier',
+          fontSize: '20px',
+          backgroundColor: '#F3B141',
+          color: '#843605',
+          align: 'right',
+          padding: {
+              top: 5,
+              bottom: 5,
+          },
+          fixedWidth: 100
+        }
+        this.initialTime = 10
+        this.clockMiddle = this.add.text(borderUISize + borderPadding*43, borderUISize + borderPadding*2, 'time:' + this.initialTime, timeConfig);
+        this.timedEvent = this.time.addEvent({ delay: 1000, callback: this.countdown, callbackScope: this, repeat: this.initialTime - 1 });
+        this.clock = this.time.delayedCall(10000, () => {
         this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0.5);
         this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart or ← for Menu', scoreConfig).setOrigin(0.5);
         this.gameOver = true;
@@ -129,10 +142,40 @@ class Play extends Phaser.Scene {
         // score add and repaint
         this.p1Score += ship.points;
         this.scoreLeft.text = this.p1Score;
-        this.highScore += ship.points;
-        this.scoreRight.text += this.highScore;  
-        this.sound.play('sfx_explosion');    
+        //this.initialTime += ship.points/10;
+        let num = Math.floor(Math.random()*4);
+        if (num == 0) {
+          this.sound.play('sfx_explosion1');
+        }
+        else if (num == 1) {
+          this.sound.play('sfx_explosion2')
+        }
+        else if (num == 2) {
+          this.sound.play('sfx_explosion3')
+        }
+        else if (num == 3) {
+          this.sound.play('sfx_explosion4')
+        }
+        else {
+          this.sound.play('sfx_explosion5')
+        }
       }
-        
+    
+    countdown() {
+      let timeConfig = {
+        fontFamily: 'Courier',
+        fontSize: '20px',
+        backgroundColor: '#F3B141',
+        color: '#843605',
+        align: 'right',
+        padding: {
+            top: 5,
+            bottom: 5,
+        },
+        fixedWidth: 100
+      }
+      this.initialTime -= 1;
+      this.clockMiddle = this.add.text(borderUISize + borderPadding*43, borderUISize + borderPadding*2, 'time:' + this.initialTime, timeConfig);
+    }
 
 }
