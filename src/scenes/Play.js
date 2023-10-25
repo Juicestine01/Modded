@@ -58,7 +58,6 @@ class Play extends Phaser.Scene {
         // GAME OVER flag
         this.gameOver = false;
         // 60-second play clock
-        scoreConfig.fixedWidth = 0;
         let timeConfig = {
           fontFamily: 'Courier',
           fontSize: '20px',
@@ -71,14 +70,18 @@ class Play extends Phaser.Scene {
           },
           fixedWidth: 100
         }
-        this.initialTime = 10
+        this.initialTime = 60;
         this.clockMiddle = this.add.text(borderUISize + borderPadding*43, borderUISize + borderPadding*2, 'time:' + this.initialTime, timeConfig);
-        this.timedEvent = this.time.addEvent({ delay: 1000, callback: this.countdown, callbackScope: this, repeat: this.initialTime - 1 });
-        this.clock = this.time.delayedCall(10000, () => {
+        this.timedEvent = this.time.addEvent({ delay: 1000, callback: this.countdown, callbackScope: this, loop: true });
+        
+        /*this.clockMiddle = this.add.text(borderUISize + borderPadding*43, borderUISize + borderPadding*2, 'time:' + this.initialTime, timeConfig);
+        this.timedEvent = this.time.addEvent({ delay: 1000, callback: this.countdown, callbackScope: this, repeat: true });
+        this.initialTime = 10;*/
+        /*this.clock = this.time.delayedCall(this.initialTime*1000, () => {
         this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0.5);
         this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart or ← for Menu', scoreConfig).setOrigin(0.5);
         this.gameOver = true;
-        }, null, this);
+        }, null, this);*/
     }
 
     update() {
@@ -142,7 +145,7 @@ class Play extends Phaser.Scene {
         // score add and repaint
         this.p1Score += ship.points;
         this.scoreLeft.text = this.p1Score;
-        //this.initialTime += ship.points/10;
+        this.initialTime += ship.points/10;
         let num = Math.floor(Math.random()*4);
         if (num == 0) {
           this.sound.play('sfx_explosion1');
@@ -162,6 +165,18 @@ class Play extends Phaser.Scene {
       }
     
     countdown() {
+      let scoreConfig = {
+        fontFamily: 'Courier',
+        fontSize: '28px',
+        backgroundColor: '#F3B141',
+        color: '#843605',
+        align: 'right',
+        padding: {
+            top: 5,
+            bottom: 5,
+        },
+        fixedWidth: 100
+      }
       let timeConfig = {
         fontFamily: 'Courier',
         fontSize: '20px',
@@ -174,8 +189,16 @@ class Play extends Phaser.Scene {
         },
         fixedWidth: 100
       }
-      this.initialTime -= 1;
-      this.clockMiddle = this.add.text(borderUISize + borderPadding*43, borderUISize + borderPadding*2, 'time:' + this.initialTime, timeConfig);
+      scoreConfig.fixedWidth = 0;
+      if (this.initialTime <= 0) {
+        this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0.5);
+        this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart or ← for Menu', scoreConfig).setOrigin(0.5);
+        this.gameOver = true;
+      }
+      else {
+        this.initialTime -= 1;
+        this.clockMiddle = this.add.text(borderUISize + borderPadding*43, borderUISize + borderPadding*2, 'time:' + this.initialTime, timeConfig);
+      }
     }
 
 }

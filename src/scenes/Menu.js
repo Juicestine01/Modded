@@ -12,29 +12,44 @@ class Menu extends Phaser.Scene {
         this.load.audio('sfx_explosion4', './assets/Explosion4.wav');
         this.load.audio('sfx_explosion5', './assets/Explosion5.wav');
         this.load.audio('sfx_rocket', './assets/rocket_shot.wav');
+        this.load.image('starfield', './assets/starfield.png')
+        this.load.image('titleRocket3', '/assets/titleRocket3.png')
       }
     
     create() {
+        this.add.image(game.config.width / 2, game.config.height / 2, 'starfield').setOrigin(0.5);
+        /*let overlay = this.add.graphics();
+        overlay.fillStyle(0x00000, 0.5);
+        overlay.fillRect(0, 0, game.config.width, game.config.height);*/
+        this.add.image (game.config.width/2, game.config.height/2 -25, 'titleRocket3').setOrigin(0.5);
         // menu text configuration
         let menuConfig = {
-            fontFamily: 'Courier',
+            fontFamily: 'Trebuchet MS',
             fontSize: '28px',
-            backgroundColor: '#F3B141',
-            color: '#843605',
-            align: 'right',
+            color: '#FFFFFF',
+            align: 'center',
             padding: {
                 top: 5,
                 bottom: 5,
             },
             fixedWidth: 0
         }
+        let titleConfig = {
+          fontFamily: 'Trebuchet MS',
+          fontSize: '46px',
+          color: '#FFFFFF',
+          align: 'center',
+          padding: {
+              top: 5,
+              bottom: 5,
+          },
+          fixedWidth: 0
+      }
         
         // show menu text
-        this.add.text(game.config.width/2, game.config.height/2 - borderUISize - borderPadding, 'ROCKET PATROL', menuConfig).setOrigin(0.5);
-        this.add.text(game.config.width/2, game.config.height/2, 'Use ←→ arrows to move & (F) to fire', menuConfig).setOrigin(0.5);
-        menuConfig.backgroundColor = '#00FF00';
-        menuConfig.color = '#000';
-        this.add.text(game.config.width/2, game.config.height/2 + borderUISize + borderPadding, 'Press ← for Novice or → for Expert', menuConfig).setOrigin(0.5);
+        this.add.text(game.config.width/2, game.config.height/2 - 200, 'ROCKET PATROL', titleConfig).setOrigin(0.5);
+        this.add.text(game.config.width/2, game.config.height/2 + 125, 'Use ←→ arrows to move & (F) to fire', menuConfig).setOrigin(0.5);
+        this.add.text(game.config.width/2, game.config.height/2 + borderUISize + borderPadding + 125, 'Press ← for Novice or → for Expert', menuConfig).setOrigin(0.5);
 
         // define keys
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
