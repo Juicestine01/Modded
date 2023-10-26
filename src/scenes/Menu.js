@@ -21,7 +21,7 @@ class Menu extends Phaser.Scene {
         /*let overlay = this.add.graphics();
         overlay.fillStyle(0x00000, 0.5);
         overlay.fillRect(0, 0, game.config.width, game.config.height);*/
-        this.add.image (game.config.width/2, game.config.height/2 -25, 'titleRocket3').setOrigin(0.5);
+        this.add.image (game.config.width/2, game.config.height/2 -25, 'title').setOrigin(0.5);
         // menu text configuration
         let menuConfig = {
             fontFamily: 'Trebuchet MS',
